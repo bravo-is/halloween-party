@@ -44,9 +44,9 @@ body { background: #0c0d0f; }
 .rsvp-card h3 { font-family: Georgia, serif; font-weight: 400; letter-spacing: -1px; }
 .primary { box-shadow: 0 0 26px #ffffee0b; }
 .primary:hover { box-shadow: 0 0 26px #ffffee26; }
-.closing { padding: 60px 8% 75px; background: radial-gradient(ellipse at 95% 100%, #bbbfc51b, transparent 50%); }
-.closing-word { font-size: clamp(36px, 6.6vw, 108px); letter-spacing: -.045em; gap: 30px; }
-.closing-word .closing-orb { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #ece8df 50%, #adb0b5); box-shadow: 0 0 50px #fff5; }
+.closing { padding: 60px 8% 75px; background: radial-gradient(ellipse 760px 240px at 50% 100%, #ffffff09, transparent 72%); }
+.closing-word { justify-content: flex-start; font-size: clamp(36px, 6.6vw, 108px); letter-spacing: -.045em; gap: 26px; }
+.closing-word .closing-orb { flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(circle at 35% 29%, #fff 0%, #fffcf4 30%, #eae8e1 57%, #b5b6b8 86%, #74767a); box-shadow: 0 0 10px #fff9, 0 0 32px #f2f2f345, 0 0 60px #f4f0f020; }
 footer { min-height: 110px; justify-content: flex-end; }
 .admin-main { background: transparent; }
 .admin-heading h1, .login-card h2, dialog h2 { font-family: Georgia, serif; font-weight: 400; }
