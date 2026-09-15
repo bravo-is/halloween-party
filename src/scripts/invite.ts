@@ -25,8 +25,9 @@ form.addEventListener('submit', async event => {
   } catch { message.textContent = 'Could not save your RSVP. Please try again.'; }
   finally { button.disabled = false; }
 });
-if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
   document.querySelector('.hero')?.addEventListener('pointermove', (event) => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const e = event as PointerEvent;
     const scene = document.querySelector<HTMLElement>('.orb-scene')!;
     scene.style.setProperty('--mx', `${(e.clientX / innerWidth - .5) * 18}px`);
