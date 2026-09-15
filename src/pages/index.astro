@@ -1,7 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { party } from '../config';
-import Brand from '../components/Brand.astro';
 import Heaven from '../components/Heaven.astro';
 ---
 <Layout>
@@ -10,14 +9,14 @@ import Heaven from '../components/Heaven.astro';
     <div class="ascension">
     <section class="hero" aria-labelledby="hero-title">
       <Heaven/>
-      <div class="hero-copy"><p class="eyebrow">BETWEEN THIS WORLD & THE NEXT</p><h1 id="hero-title"><span class="project-title">PROJECT</span><span class="heaven-title">HEAVEN</span></h1><a href="#invitation" class="scroll-cue" aria-label="Scroll to your invitation"><span class="scroll-cue-orb"></span><span class="scroll-cue-thread"></span></a></div>
+      <div class="hero-copy"><p class="eyebrow">BETWEEN THIS WORLD & THE NEXT</p><h1 id="hero-title"><span class="project-title">PROJECT</span><span class="heaven-title">HEAVEN</span></h1><a href="#invitation" class="scroll-cue" aria-label="Scroll to your invitation"><span class="scroll-cue-caption">Your invitation awaits</span><span class="scroll-cue-thread-wrap"><span class="scroll-cue-orb"></span><span class="scroll-cue-thread"></span></span></a></div>
     </section>
     <section id="invitation" class="invitation-section">
       <div class="section-intro"><span class="eyebrow">THE ASCENSION</span><h2>Look divine.<br/><em>Be damned.</em></h2><p> Come find your place among the spirits.</p><div class="details"><div><span>WHEN</span><p>{party.date}<br/>{party.time}</p></div><div><span>WHERE</span><p id="venue">Revealed with your invitation</p></div><div><span>THE DRESS CODE</span><p>{party.dressCode}<br/>Heavenly, haunted, or somewhere between.</p></div></div></div>
-      <div class="rsvp-card"><div class="card-top"><span>BEYOND THE PEARLY GATES</span><span>✧</span></div><div id="invite-loading"><h3>Some doors<br/>open only for you.</h3><p id="invite-message">Open the personal link your hosts sent you to RSVP. Your invitation has your name on it.</p></div><form id="rsvp-form" hidden><span class="eyebrow">A PLACE IN HEAVEN FOR</span><h3 id="guest-name"></h3><p>Will we see you on the other side?</p><fieldset><legend class="sr-only">Your RSVP</legend><label class="choice"><input type="radio" name="status" value="yes" required/><span>I'm in <span>↗︎</span></span></label><label class="choice"><input type="radio" name="status" value="no"/><span>Can't make it <span>↘︎</span></span></label></fieldset><label class="note-label" for="note">LEAVE A LITTLE NOTE <span>OPTIONAL</span></label><textarea id="note" name="note" maxlength="1000" rows="3" placeholder="A song request, dietary need, or cryptic message…"></textarea><button class="button primary" type="submit">Seal my RSVP <span>↗︎</span></button><p class="form-message" id="rsvp-message" role="status" aria-live="polite"></p><p class="fine-print">Changed your mind? Return to this link anytime.</p></form><div class="card-bottom"><span>ADMIT ONE BEAUTIFUL SOUL</span><span>31 / 10 / 26</span></div></div>
+      <div class="rsvp-card"><div id="invite-loading"><h3>Some doors<br/>open only for you.</h3><p id="invite-message">Open the personal link your hosts sent you to RSVP. Your invitation has your name on it.</p></div><form id="rsvp-form" hidden><span class="eyebrow">A PLACE IN HEAVEN FOR</span><h3 id="guest-name"></h3><p>Will we see you on the other side?</p><fieldset><legend class="sr-only">Your RSVP</legend><label class="choice"><input type="radio" name="status" value="yes" required/><span>I'm in <span>↗︎</span></span></label><label class="choice"><input type="radio" name="status" value="no"/><span>Can't make it <span>↘︎</span></span></label></fieldset><label class="note-label" for="note">LEAVE A LITTLE NOTE <span>OPTIONAL</span></label><textarea id="note" name="note" maxlength="1000" rows="3" placeholder="A song request, dietary need, or cryptic message…"></textarea><button class="button primary" type="submit">Seal my RSVP <span>↗︎</span></button><p class="form-message" id="rsvp-message" role="status" aria-live="polite"></p><p class="fine-print">Changed your mind? Return to this link anytime.</p></form><div class="card-bottom"><span>ADMIT ONE BEAUTIFUL SOUL</span><span>31 / 10 / 26</span></div></div>
     </section>
     </div>
     <div class="closing"><span>OCTOBER 31 · ONE NIGHT ONLY</span><span class="closing-word">See you on the other side.<span class="closing-orb" aria-hidden="true"></span></span></div>
-  </main><footer><Brand/><span>HALLOWED BE THE NIGHT.</span><a href="/admin/">HOST ACCESS ↗︎</a></footer>
+  </main><footer><a href="/admin/">HOST ACCESS ↗︎</a></footer>
   <script src="../scripts/invite.ts"></script>
 </Layout>

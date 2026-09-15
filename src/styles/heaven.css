@@ -27,7 +27,10 @@ body { background: #0c0d0f; }
 .hero h1 { margin: 0; font-weight: 400; letter-spacing: 0; line-height: 1; }
 .hero h1 .project-title { display: block; font-family: "Trebuchet MS", sans-serif; font-size: 15px; letter-spacing: 12px; padding-left: 12px; margin-bottom: 12px; color: #eeeae2; }
 .hero h1 .heaven-title { display: block; font-family: 'Times New Roman', Georgia, serif; font-size: clamp(80px, 14.6vw, 230px); font-weight: 400; line-height: .88; letter-spacing: -.035em; color: #f4f1eb; text-shadow: 0 2px 30px #101115; }
-.scroll-cue { position: relative; display: inline-flex; flex-direction: column; align-items: center; width: 1px; height: 90px; margin-top: 88px; }
+.scroll-cue { position: relative; display: inline-flex; flex-direction: column; align-items: center; gap: 18px; margin-top: 88px; }
+.scroll-cue-caption { font-family: Georgia, serif; font-style: italic; font-size: 13px; letter-spacing: .4px; color: #cac6bf; transition: color .4s; }
+.scroll-cue:hover .scroll-cue-caption { color: var(--pearl); }
+.scroll-cue-thread-wrap { position: relative; width: 1px; height: 90px; }
 .scroll-cue-thread { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, #d0cfd255 25%, #d0cfd255 75%, transparent); }
 .scroll-cue-orb { position: absolute; left: 50%; top: -5px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: radial-gradient(circle at 35% 29%, #fff 0%, #fffcf4 30%, #eae8e1 57%, #b5b6b8 86%, #74767a); box-shadow: 0 0 8px #fff9, 0 0 18px #f2f2f355; animation: scroll-cue-fall 2.8s ease-in-out infinite; }
 .scroll-cue:hover .scroll-cue-orb { animation-duration: 1.4s; }
@@ -39,14 +42,12 @@ body { background: #0c0d0f; }
 .eyebrow { color: #cac6bf; }
 .rsvp-card { border-color: #4b4b4f; background: linear-gradient(130deg, #28292c, #151618 65%); box-shadow: 0 20px 80px #0004, inset 0 1px 0 #ffffff13; }
 .rsvp-card h3 { font-family: Georgia, serif; font-weight: 400; letter-spacing: -1px; }
-.card-top { font-size: 10px; letter-spacing: 1.7px; }
-.card-top > span:last-child { font-size: 26px; }
 .primary { box-shadow: 0 0 26px #ffffee0b; }
 .primary:hover { box-shadow: 0 0 26px #ffffee26; }
 .closing { padding: 60px 8% 75px; background: radial-gradient(ellipse at 95% 100%, #bbbfc51b, transparent 50%); }
 .closing-word { font-size: clamp(36px, 6.6vw, 108px); letter-spacing: -.045em; gap: 30px; }
 .closing-word .closing-orb { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #ece8df 50%, #adb0b5); box-shadow: 0 0 50px #fff5; }
-footer { min-height: 110px; }
+footer { min-height: 110px; justify-content: flex-end; }
 .admin-main { background: transparent; }
 .admin-heading h1, .login-card h2, dialog h2 { font-family: Georgia, serif; font-weight: 400; }
 .stat strong { font-family: Georgia, serif; }
