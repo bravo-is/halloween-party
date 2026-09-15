@@ -1,0 +1,8 @@
+---
+const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,16],[12,73,24,-2,12],[3,59,58,-4,19],[69,19,56,-5,15],[80,41,102,-10,19],[91,23,29,-6,14],[96,63,66,-1,17],[70,65,32,-9,13],[87,78,22,-4,16],[40,9,16,-5,12],[60,31,21,-2,16],[22,87,18,-7,18]];
+---
+<div class="orb-scene" aria-hidden="true">
+  <div class="heaven-haze"></div>
+  {spheres.map(([x,y,size,delay,duration]) => <div class="suspended-light" style={`--x:${x}%;--y:${y}%;--size:${size}px;--delay:${delay}s;--duration:${duration}s`}><span class="suspension"></span><span class="sphere"></span></div>)}
+</div>
+<div class="hero-sigil"><img src="/project-heaven-logo.jpg" alt="Project Heaven sigil" width="1097" height="1280" fetchpriority="high" /></div>

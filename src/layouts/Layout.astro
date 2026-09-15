@@ -1,0 +1,37 @@
+---
+import '../styles/global.css';
+import '../styles/heaven.css';
+const { title = 'Project Heaven — Hallowed be the night', sharePreview = true } = Astro.props;
+const description = 'Look divine. Be damned. A private Halloween gathering. October 31, 2026.';
+const image = new URL('/project-heaven-social.jpg', Astro.site).href;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#0c0d0f" />
+    <link rel="icon" href="/favicon.svg" />
+    <title>{title}</title>
+    {sharePreview && <>
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content="Project Heaven" />
+      <meta property="og:title" content="Project Heaven · October 31" />
+      <meta property="og:description" content={description} />
+      <meta property="og:image" content={image} />
+      <meta property="og:image:type" content="image/jpeg" />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+      <meta property="og:image:alt" content="Project Heaven sigil surrounded by glowing white spheres. Look divine. Be damned. Halloween, October 31." />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Project Heaven · October 31" />
+      <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image:alt" content="Project Heaven. Look divine. Be damned. Glowing spheres suspended in darkness." />
+    </>}
+    <!-- No canonical or og:url override: shared invitation URLs must retain their unique query token. -->
+  </head>
+  <body><slot /></body>
+</html>
