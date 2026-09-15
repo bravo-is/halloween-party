@@ -11,26 +11,16 @@ const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,1
   const scene = document.querySelector('.orb-scene');
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
   const coarsePointerQuery = matchMedia('(hover: none), (pointer: coarse)');
-  if (scene) {
+  if (scene && coarsePointerQuery.matches) {
+    scene.classList.add('orb-scene--scripted');
     const lights = Array.from(scene.querySelectorAll('.suspended-light')).map((el) => {
       const style = getComputedStyle(el);
       return { el, duration: parseFloat(style.getPropertyValue('--duration')) || 15, delay: parseFloat(style.getPropertyValue('--delay')) || 0 };
     });
     let frame = 0;
     let running = false;
-    let scriptedBob = false;
     let inView = scene.getBoundingClientRect().bottom > 0 && scene.getBoundingClientRect().top < innerHeight;
-    const useScriptedBob = () => coarsePointerQuery.matches;
-    const shouldAnimate = () => useScriptedBob() && !motionQuery.matches && !document.hidden && inView;
-    const syncMode = () => {
-      const nextScriptedBob = useScriptedBob();
-      if (scriptedBob === nextScriptedBob) return;
-      scriptedBob = nextScriptedBob;
-      for (const { el } of lights) {
-        el.style.animation = scriptedBob ? 'none' : '';
-        if (!scriptedBob) el.style.transform = '';
-      }
-    };
+    const shouldAnimate = () => !motionQuery.matches && !document.hidden && inView;
     const start = () => {
       if (!running && shouldAnimate()) {
         running = true;
@@ -46,9 +36,8 @@ const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,1
       running = false;
     };
     const sync = () => {
-      syncMode();
       if (shouldAnimate()) start();
-      else stop(motionQuery.matches || !scriptedBob);
+      else stop(motionQuery.matches);
     };
     const tick = (now) => {
       if (!shouldAnimate()) {
@@ -71,8 +60,6 @@ const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,1
     document.addEventListener('visibilitychange', sync);
     if (motionQuery.addEventListener) motionQuery.addEventListener('change', sync);
     else motionQuery.addListener(sync);
-    if (coarsePointerQuery.addEventListener) coarsePointerQuery.addEventListener('change', sync);
-    else coarsePointerQuery.addListener(sync);
     sync();
   }
 </script>
