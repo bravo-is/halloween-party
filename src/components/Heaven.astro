@@ -10,16 +10,27 @@ const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,1
   // Safari mobile throttles pure CSS keyframe animations until a scroll/touch repaint; drive the bob via rAF instead.
   const scene = document.querySelector('.orb-scene');
   const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+  const coarsePointerQuery = matchMedia('(hover: none), (pointer: coarse)');
   if (scene) {
     const lights = Array.from(scene.querySelectorAll('.suspended-light')).map((el) => {
       const style = getComputedStyle(el);
-      el.style.animation = 'none';
       return { el, duration: parseFloat(style.getPropertyValue('--duration')) || 15, delay: parseFloat(style.getPropertyValue('--delay')) || 0 };
     });
     let frame = 0;
     let running = false;
+    let scriptedBob = false;
     let inView = scene.getBoundingClientRect().bottom > 0 && scene.getBoundingClientRect().top < innerHeight;
-    const shouldAnimate = () => !motionQuery.matches && !document.hidden && inView;
+    const useScriptedBob = () => coarsePointerQuery.matches;
+    const shouldAnimate = () => useScriptedBob() && !motionQuery.matches && !document.hidden && inView;
+    const syncMode = () => {
+      const nextScriptedBob = useScriptedBob();
+      if (scriptedBob === nextScriptedBob) return;
+      scriptedBob = nextScriptedBob;
+      for (const { el } of lights) {
+        el.style.animation = scriptedBob ? 'none' : '';
+        if (!scriptedBob) el.style.transform = '';
+      }
+    };
     const start = () => {
       if (!running && shouldAnimate()) {
         running = true;
@@ -34,7 +45,11 @@ const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,1
       frame = 0;
       running = false;
     };
-    const sync = () => shouldAnimate() ? start() : stop(motionQuery.matches);
+    const sync = () => {
+      syncMode();
+      if (shouldAnimate()) start();
+      else stop(motionQuery.matches || !scriptedBob);
+    };
     const tick = (now) => {
       if (!shouldAnimate()) {
         stop(motionQuery.matches);
@@ -56,6 +71,8 @@ const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,1
     document.addEventListener('visibilitychange', sync);
     if (motionQuery.addEventListener) motionQuery.addEventListener('change', sync);
     else motionQuery.addListener(sync);
+    if (coarsePointerQuery.addEventListener) coarsePointerQuery.addEventListener('change', sync);
+    else coarsePointerQuery.addListener(sync);
     sync();
   }
 </script>
