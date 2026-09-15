@@ -1,6 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Arrow from '../components/Arrow.astro';
 import { party } from '../config';
 import Heaven from '../components/Heaven.astro';
 ---
@@ -14,10 +13,10 @@ import Heaven from '../components/Heaven.astro';
     </section>
     <section id="invitation" class="invitation-section">
       <div class="section-intro"><span class="eyebrow">THE ASCENSION</span><h2>Look divine.<br/><em>Be damned.</em></h2><p> Come find your place among the spirits.</p><div class="details"><div><span>WHEN</span><p>{party.date}<br/>{party.time}</p></div><div><span>WHERE</span><p id="venue">Revealed with your invitation</p></div><div><span>THE DRESS CODE</span><p>{party.dressCode}<br/>Heavenly, haunted, or somewhere between.</p></div></div></div>
-      <div class="rsvp-card"><div id="invite-loading"><h3>The Pearly Gates<br/>open only by name.</h3><p id="invite-message">Open the personal link your hosts sent you to RSVP. Your invitation has your name on it.</p></div><form id="rsvp-form" hidden><span class="eyebrow">A PLACE IN HEAVEN FOR</span><h3 id="guest-name"></h3><p>Will we see you on the other side?</p><fieldset><legend class="sr-only">Your RSVP</legend><label class="choice"><input type="radio" name="status" value="yes" required/><span>I'm in <span><Arrow /></span></span></label><label class="choice"><input type="radio" name="status" value="no"/><span>Can't make it <span><Arrow direction="down-right" /></span></span></label></fieldset><label class="note-label" for="note">LEAVE A LITTLE NOTE <span>OPTIONAL</span></label><textarea id="note" name="note" maxlength="1000" rows="3" placeholder="A song request, dietary need, or cryptic message…"></textarea><button class="button primary" type="submit">Seal my RSVP <span><Arrow /></span></button><p class="form-message" id="rsvp-message" role="status" aria-live="polite"></p><p class="fine-print">Changed your mind? Return to this link anytime.</p></form><div class="card-bottom"><span>ADMIT ONE BEAUTIFUL SOUL</span><span>31 / 10 / 26</span></div></div>
+      <div class="rsvp-card"><div id="invite-loading"><h3>The Pearly Gates<br/>open only by name.</h3><p id="invite-message">Open the personal link your hosts sent you to RSVP. Your invitation has your name on it.</p></div><form id="rsvp-form" hidden><span class="eyebrow">A PLACE IN HEAVEN FOR</span><h3 id="guest-name"></h3><p>Will we see you on the other side?</p><fieldset><legend class="sr-only">Your RSVP</legend><label class="choice"><input type="radio" name="status" value="yes" required/><span>I'm in <span><span aria-hidden="true">&#8599;&#65038;</span></span></span></label><label class="choice"><input type="radio" name="status" value="no"/><span>Can't make it <span><span aria-hidden="true">&#8600;&#65038;</span></span></span></label></fieldset><label class="note-label" for="note">LEAVE A LITTLE NOTE <span>OPTIONAL</span></label><textarea id="note" name="note" maxlength="1000" rows="3" placeholder="A song request, dietary need, or cryptic message…"></textarea><button class="button primary" type="submit">Seal my RSVP <span><span aria-hidden="true">&#8599;&#65038;</span></span></button><p class="form-message" id="rsvp-message" role="status" aria-live="polite"></p><p class="fine-print">Changed your mind? Return to this link anytime.</p></form><div class="card-bottom"><span>ADMIT ONE BEAUTIFUL SOUL</span><span>31 / 10 / 26</span></div></div>
     </section>
     </div>
     <div class="closing"><span>OCTOBER 31 · ONE NIGHT ONLY</span><span class="closing-word">See you on the other side.<span class="closing-orb" aria-hidden="true"></span></span></div>
-  </main><footer><a href="/admin/">HOST ACCESS <Arrow /></a></footer>
+  </main><footer><a href="/admin/">HOST ACCESS <span aria-hidden="true">&#8599;&#65038;</span></a></footer>
   <script src="../scripts/invite.ts"></script>
 </Layout>
