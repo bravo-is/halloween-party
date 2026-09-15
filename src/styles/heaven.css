@@ -34,6 +34,7 @@ body { background: #0c0d0f; }
 .scroll-cue-thread-wrap { position: relative; width: 1px; height: 90px; }
 .scroll-cue-thread { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, #d0cfd255 25%, #d0cfd255 75%, transparent); }
 .scroll-cue-orb { position: absolute; left: 50%; top: -5px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: radial-gradient(circle at 35% 29%, #fff 0%, #fffcf4 30%, #eae8e1 57%, #b5b6b8 86%, #74767a); box-shadow: 0 0 8px #fff9, 0 0 18px #f2f2f355; animation: scroll-cue-fall 2.8s ease-in-out infinite; }
+.scroll-cue--scripted .scroll-cue-orb { animation: none; }
 .event-strip { margin-top: 36px; padding: 24px 0; font-size: 10px; letter-spacing: 2px; }
 .strip-star { font-size: 17px; opacity: .65; }
 .invitation-section { position: relative; padding: 110px 8% 120px; gap: 10%; }
@@ -57,7 +58,6 @@ footer { min-height: 110px; justify-content: flex-end; }
 @keyframes scroll-cue-fall { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(96px); opacity: 0; } }
 @media (hover: hover) and (pointer: fine) {
   .scroll-cue:hover .scroll-cue-caption { color: var(--pearl); }
-  .scroll-cue:hover .scroll-cue-orb { animation-duration: 1.4s; }
 }
 @media (min-width: 901px) {
   .ascension {
