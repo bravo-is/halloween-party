@@ -6,3 +6,56 @@ const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,1
   {spheres.map(([x,y,size,delay,duration]) => <div class="suspended-light" style={`--x:${x}%;--y:${y}%;--size:${size}px;--delay:${delay}s;--duration:${duration}s`}><span class="suspension"></span><span class="sphere"></span></div>)}
 </div>
 <div class="hero-sigil"><img src="/project-heaven-logo.jpg" alt="Project Heaven sigil" width="1097" height="1280" fetchpriority="high" /></div>
+<script>
+  // Safari mobile throttles pure CSS keyframe animations until a scroll/touch repaint; drive the bob via rAF instead.
+  const scene = document.querySelector('.orb-scene');
+  const motionQuery = matchMedia('(prefers-reduced-motion: reduce)');
+  if (scene) {
+    const lights = Array.from(scene.querySelectorAll('.suspended-light')).map((el) => {
+      const style = getComputedStyle(el);
+      el.style.animation = 'none';
+      return { el, duration: parseFloat(style.getPropertyValue('--duration')) || 15, delay: parseFloat(style.getPropertyValue('--delay')) || 0 };
+    });
+    let frame = 0;
+    let running = false;
+    let inView = scene.getBoundingClientRect().bottom > 0 && scene.getBoundingClientRect().top < innerHeight;
+    const shouldAnimate = () => !motionQuery.matches && !document.hidden && inView;
+    const start = () => {
+      if (!running && shouldAnimate()) {
+        running = true;
+        frame = requestAnimationFrame(tick);
+      }
+    };
+    const stop = (reset = false) => {
+      if (frame) cancelAnimationFrame(frame);
+      if (reset) {
+        for (const { el } of lights) el.style.transform = '';
+      }
+      frame = 0;
+      running = false;
+    };
+    const sync = () => shouldAnimate() ? start() : stop(motionQuery.matches);
+    const tick = (now) => {
+      if (!shouldAnimate()) {
+        stop(motionQuery.matches);
+        return;
+      }
+      const t = now / 1000;
+      for (const { el, duration, delay } of lights) {
+        const period = duration * 2;
+        const phase = ((((t + delay) % period) + period) % period) / period;
+        const wave = (1 - Math.cos(phase * Math.PI * 2)) / 2;
+        el.style.transform = `translate3d(${-5 + wave * 11}px, ${12 - wave * 46}px, 0)`;
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    new IntersectionObserver(([entry]) => {
+      inView = !!entry?.isIntersecting;
+      sync();
+    }).observe(scene);
+    document.addEventListener('visibilitychange', sync);
+    if (motionQuery.addEventListener) motionQuery.addEventListener('change', sync);
+    else motionQuery.addListener(sync);
+    sync();
+  }
+</script>
