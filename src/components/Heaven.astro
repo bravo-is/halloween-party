@@ -2,7 +2,6 @@
 const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,16],[12,73,24,-2,12],[3,59,58,-4,19],[69,19,56,-5,15],[80,41,102,-10,19],[91,23,29,-6,14],[96,63,66,-1,17],[70,65,32,-9,13],[87,78,22,-4,16],[40,9,16,-5,12],[60,31,21,-2,16],[22,87,18,-7,18]];
 ---
 <div class="orb-scene" aria-hidden="true">
-  <div class="heaven-haze"></div>
   {spheres.map(([x,y,size,delay,duration]) => <div class="suspended-light" style={`--x:${x}%;--y:${y}%;--size:${size}px;--delay:${delay}s;--duration:${duration}s`}><span class="suspension"></span><span class="sphere"></span></div>)}
 </div>
 <div class="hero-sigil"><img src="/project-heaven-sigil.png" alt="Project Heaven sigil" width="295" height="935" fetchpriority="high" /></div>
@@ -25,10 +24,12 @@ const spheres = [[8,28,36,0,14],[18,47,90,-6,17],[28,15,26,-3,13],[34,37,42,-8,1
       const style = getComputedStyle(light);
       const duration = (parseFloat(style.getPropertyValue('--duration')) || 15) * 1000;
       const delay = (parseFloat(style.getPropertyValue('--delay')) || 0) * 1000;
-      const animation = light.animate([
-        { transform: 'translate3d(-5px, 12px, 0)' },
-        { transform: 'translate3d(6px, -34px, 0)' },
-      ], { duration, delay, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+      // Touch browsers repaint position changes without relying on transform compositing.
+      const y = style.getPropertyValue('--y').trim();
+      const frames = matchMedia('(pointer: coarse)').matches
+        ? [{ top: `calc(${y} + 12px)` }, { top: `calc(${y} - 34px)` }]
+        : [{ transform: 'translate3d(-5px, 12px, 0)' }, { transform: 'translate3d(6px, -34px, 0)' }];
+      const animation = light.animate(frames, { duration, delay, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
       light.style.animation = 'none';
       animations.push(animation);
     });
