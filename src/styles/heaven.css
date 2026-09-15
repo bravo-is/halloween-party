@@ -5,9 +5,9 @@ body { background: #0c0d0f; }
 .brand { display: inline-flex; align-items: center; gap: 13px; }
 .brand-sigil { display: block; position: relative; width: 26px; height: 52px; overflow: hidden; mix-blend-mode: screen; }
 .brand-sigil img { position: absolute; width: 85px; height: auto; top: -7px; left: -29px; filter: url('/sigil-filter.svg#ink'); }
-.brand-name { font-size: 10px; line-height: 1.6; letter-spacing: 3px; color: #bbb8b3; }
+.brand-name { font-size: 12px; line-height: 1.6; letter-spacing: 3px; color: #bbb8b3; }
 .brand-name strong { color: var(--pearl); font-weight: 400; letter-spacing: 2.6px; }
-.header-note, .header-link { font-size: 11px; letter-spacing: 2px; }
+.header-note, .header-link { font-size: 14px; letter-spacing: .5px; }
 .header-link { border-color: #5f6064; }
 .hero { min-height: 890px; padding: 28px 5% 0; isolation: isolate; background: radial-gradient(ellipse at 50% 31%, #30303538, transparent 49%); }
 .hero-top { font-size: 10px; letter-spacing: 2px; }
@@ -25,7 +25,7 @@ body { background: #0c0d0f; }
 .hero-copy { padding-top: 338px; max-width: none; text-align: center; }
 .hero-copy > .eyebrow { font-size: 10px; letter-spacing: 4px; color: #c4c0b9; margin: 0 0 22px; }
 .hero h1 { margin: 0; font-weight: 400; letter-spacing: 0; line-height: 1; }
-.hero h1 .project-title { display: block; font-family: Arial, Helvetica, sans-serif; font-size: 15px; letter-spacing: 12px; padding-left: 12px; margin-bottom: 12px; color: #eeeae2; }
+.hero h1 .project-title { display: block; font-family: "Trebuchet MS", sans-serif; font-size: 15px; letter-spacing: 12px; padding-left: 12px; margin-bottom: 12px; color: #eeeae2; }
 .hero h1 .heaven-title { display: block; font-family: 'Times New Roman', Georgia, serif; font-size: clamp(80px, 14.6vw, 230px); font-weight: 400; line-height: .88; letter-spacing: -.035em; color: #f4f1eb; text-shadow: 0 2px 30px #101115; }
 .hero-bottom { flex-direction: column; max-width: none; gap: 14px; margin-top: 24px; }
 .hero-bottom p { font-size: 14px; line-height: 1.7; margin: 0; color: #bdb9b3; letter-spacing: .4px; }
@@ -47,9 +47,10 @@ body { background: #0c0d0f; }
 .closing-word { font-size: clamp(36px, 6.6vw, 108px); letter-spacing: -.045em; gap: 30px; }
 .closing-word .closing-orb { flex-shrink: 0; width: 44px; height: 44px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #fff, #ece8df 50%, #adb0b5); box-shadow: 0 0 50px #fff5; }
 footer { min-height: 110px; }
-.admin-main { background: radial-gradient(ellipse at 90% 10%, #f5f0ee08, transparent 40%); }
+.admin-main { background: transparent; }
 .admin-heading h1, .login-card h2, dialog h2 { font-family: Georgia, serif; font-weight: 400; }
 .stat strong { font-family: Georgia, serif; }
+#qr-image { height: auto; }
 @keyframes ascend { from { transform: translate3d(-5px, 12px, 0); } to { transform: translate3d(6px, -34px, 0); } }
 @media (min-width: 1600px) {
   .hero { min-height: 980px; }
@@ -69,10 +70,10 @@ footer { min-height: 110px; }
 @media (max-width: 600px) {
   .site-header { height: 84px; }
   .brand { gap: 9px; }
-  .brand-name { font-size: 8px; letter-spacing: 2px; }
+  .brand-name { font-size: 12px; letter-spacing: 1px; }
   .brand-name strong { letter-spacing: 1.6px; }
   .brand-sigil { height: 44px; }
-  .header-link { font-size: 9px; letter-spacing: 1px; }
+  .header-link { font-size: 12px; letter-spacing: .3px; }
   .header-link span { margin-left: 9px; }
   .hero { min-height: 790px; padding: 24px 6% 0; }
   .hero-top { font-size: 8px; letter-spacing: 1.5px; justify-content: center; }
