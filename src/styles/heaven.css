@@ -43,6 +43,7 @@ body { background: #0c0d0f; }
 .rsvp-card { border-color: #4b4b4f; background: linear-gradient(130deg, #28292c, #151618 65%); box-shadow: 0 20px 80px #0004, inset 0 1px 0 #ffffff13; }
 .rsvp-card h3 { font-family: Georgia, serif; font-weight: 400; letter-spacing: -1px; }
 .primary { box-shadow: 0 0 26px #ffffee0b; }
+.form-message.error { color: #ff6f6f !important; font-weight: 600; text-shadow: 0 0 16px #ff6f6f40; }
 .primary:hover { box-shadow: 0 0 26px #ffffee26; }
 .closing { padding: 60px 8% 75px; background: radial-gradient(ellipse 760px 240px at 50% 100%, #ffffff09, transparent 72%); }
 .closing-word { justify-content: flex-start; font-size: clamp(36px, 6.6vw, 108px); letter-spacing: -.045em; gap: 26px; }

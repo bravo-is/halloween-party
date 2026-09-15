@@ -42,7 +42,7 @@ export function createHandler({getStore,password,party}){
       }
       if(!secret)return json({error:'Host access needs an ADMIN_PASSWORD set in Netlify.'},503);
       if(body.action==='login'){
-        if(typeof body.password!=='string'||!equal(signature(body.password,secret),signature(secret,secret)))return json({error:'That password does not open this door.'},401);
+        if(typeof body.password!=='string'||!equal(signature(body.password,secret),signature(secret,secret)))return json({error:'No entry for sinners. (wrong password)'},401);
         return json({ok:true},200,{'Set-Cookie':cookie(makeSession(secret),28800)});
       }
       if(body.action==='logout')return json({ok:true},200,{'Set-Cookie':cookie('',0)});

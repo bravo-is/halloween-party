@@ -34,7 +34,7 @@ function render(){
     actions.append(copy,qr);row.append(info,actions);list.append(row);
   });
 }
-$('#login').addEventListener('submit',async e=>{e.preventDefault();const button=$<HTMLButtonElement>('#login button');button.disabled=true;try{await api('login',{password:$<HTMLInputElement>('#password').value});$<HTMLInputElement>('#password').value='';await refresh();}catch(error){$('#login-message').textContent=(error as Error).message;}finally{button.disabled=false;}});
+$('#login').addEventListener('submit',async e=>{e.preventDefault();const button=$<HTMLButtonElement>('#login button');button.disabled=true;try{await api('login',{password:$<HTMLInputElement>('#password').value});$<HTMLInputElement>('#password').value='';$('#login-message').classList.remove('error');await refresh();}catch(error){$('#login-message').textContent=(error as Error).message;$('#login-message').classList.add('error');}finally{button.disabled=false;}});
 $('#logout').addEventListener('click',async()=>{try{await api('logout');showLogin();}catch{$('#admin-message').textContent='Could not sign out. Please try again.';}});
 $('#add-guest').addEventListener('click',()=>{$<HTMLDialogElement>('#create-dialog').showModal();});
 document.querySelectorAll('[data-close]').forEach(button=>button.addEventListener('click',()=>button.closest('dialog')!.close()));
