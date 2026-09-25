@@ -57,8 +57,7 @@ invalidates sessions. Sign-out clears the current browser cookie.
 
 Treat invitation URLs/QR codes as private bearer links: anyone with one can read
 or update that guest's RSVP and see the location. They cannot list other
-invitations. There is no public guest registration, email delivery, plus-one
-management, or per-host account system. If a link is accidentally shared, a host
+invitations. There is no public guest registration, email delivery, or per-host account system. If a link is accidentally shared, a host
 can remove its `invite/<token>` entry in Netlify Blobs and create a new
 invitation.
 
@@ -87,3 +86,20 @@ Ordinary terminal usage does not need this workaround.
 Implementation references:
 [Netlify Blobs](https://docs.netlify.com/build/data-and-storage/netlify-blobs/),
 [Netlify Functions](https://docs.netlify.com/build/functions/overview/).
+
+## Party updates and extra guests
+
+The host dashboard has an announcements editor. Save to replace the public board;
+clear the text and save to remove an update. Plain text and line breaks are supported.
+The beverage menu is in `src/pages/index.astro`.
+
+Enable +1 when creating an invite, or use Allow +1 / Remove +1 on an existing
+invite. The personal link and QR code stay the same. Invited guests can check
+that they are bringing a +1 with their RSVP. Declining or revoking permission
+clears that extra guest. Existing invitations default to no +1.
+
+The public invited total counts invitations plus permitted +1 places, including
+pending and declined invitations. It does not reveal names, notes, or the venue.
+The host Coming count includes confirmed +1s; pending and declined counts are
+invitation responses. Announcements and the total load when the page is opened
+or reloaded, without requiring a deployment.
