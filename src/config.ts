@@ -3,9 +3,9 @@ export const party = {
   name: 'PROJECT HEAVEN',
   date: 'October 31, 2026',
   shortDate: 'SATURDAY, OCT 31',
-  time: '8 PM — LATE',
-  startsAt: '2026-10-31T20:00:00-04:00',
-  location: 'The location is coming soon',
-  address: 'Your hosts will share the address here.',
+  time: '6 PM — LATE',
+  startsAt: '2026-10-31T18:00:00-04:00',
+  location: '',
+  address: '4318 Pennswood Drive, Middletown OH 45042',
   dressCode: 'Come as your alter ego.',
 };
