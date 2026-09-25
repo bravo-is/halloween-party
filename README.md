@@ -32,6 +32,11 @@ invitation token is supplied.
 
 ## Deploy on Netlify
 
+Production share-preview images use `https://h7event.com`. Netlify deploy
+previews and branch deploys use their own deployment URL. `PUBLIC_SITE_URL`
+can override either at build time; remove or update any old override when
+changing domains, then rebuild and deploy.
+
 1. Push this repository to your Git provider and import it in Netlify.
 2. Netlify reads `netlify.toml`: build `npm run build`, publish `dist`,
    Functions `netlify/functions`.
