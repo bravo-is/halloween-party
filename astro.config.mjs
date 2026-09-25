@@ -1,7 +1,8 @@
 import { defineConfig } from 'astro/config';
-// Netlify supplies URL for production and DEPLOY_PRIME_URL for deploy previews.
+// Share previews need an absolute, publicly reachable image URL.
+// Netlify's URL can still refer to its original domain after a domain change.
 const site = process.env.PUBLIC_SITE_URL
-  || (process.env.CONTEXT === 'production' ? process.env.URL : process.env.DEPLOY_PRIME_URL)
-  || process.env.URL
-  || 'http://localhost:8888';
+  || (['deploy-preview', 'branch-deploy'].includes(process.env.CONTEXT)
+    ? process.env.DEPLOY_PRIME_URL : undefined)
+  || 'https://h7event.com';
 export default defineConfig({ site, output: 'static', vite: { build: { assetsInlineLimit: 0 } } });
