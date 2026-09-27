@@ -37,3 +37,35 @@ form.addEventListener('submit', async event => {
 });
 
 form.addEventListener('change', () => { const declined = form.querySelector<HTMLInputElement>('input[value="no"]')!.checked; const extra = document.querySelector<HTMLInputElement>('#plus-one')!; extra.disabled = declined; if(declined) extra.checked = false; });
+
+
+let faqRequestPending=false;
+let faqSnapshot='';
+async function refreshFaqs(){
+  if(faqRequestPending||document.hidden)return;
+  faqRequestPending=true;
+  const status=document.querySelector<HTMLElement>('#faq-status')!;
+  try{
+    const response=await fetch('/.netlify/functions/api?view=faq',{cache:'no-store',signal:AbortSignal.timeout(10000)});
+    if(!response.ok)throw new Error();
+    const {faqs}=await response.json();
+    const snapshot=JSON.stringify(faqs);
+    if(snapshot!==faqSnapshot){
+      const list=document.querySelector<HTMLElement>('#faq-list')!;
+      const expanded=new Set(Array.from(list.querySelectorAll<HTMLDetailsElement>('details[open]')).map(item=>item.dataset.id));
+      const entries=faqs.map((faq:{id:string;question:string;answer:string})=>{
+        const item=document.createElement('details');item.className='faq-item';item.dataset.id=faq.id;item.open=expanded.has(faq.id);
+        const question=document.createElement('summary');question.textContent=faq.question;
+        const answer=document.createElement('p');answer.textContent=faq.answer;
+        item.append(question,answer);return item;
+      });
+      list.replaceChildren(...entries);faqSnapshot=snapshot;
+    }
+    status.textContent=faqs.length?'':'Your hosts will share answers here soon.';
+  }catch{status.textContent=faqSnapshot?'Updates are temporarily unavailable. We’ll try again shortly.':'Answers are temporarily unavailable. We’ll try again shortly.';}
+  finally{faqRequestPending=false;}
+}
+void refreshFaqs();
+setInterval(()=>void refreshFaqs(),15000);
+document.addEventListener('visibilitychange',()=>void refreshFaqs());
+window.addEventListener('online',()=>void refreshFaqs());

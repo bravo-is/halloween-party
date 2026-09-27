@@ -4,7 +4,7 @@ import {createHandler,makeSession,validSession} from '../netlify/lib/handler.mjs
 const secret='test-only-password-with-32-characters';
 function fixture(password=secret){
  const records=new Map();
- const store={get:async key=>records.get(key)||null,setJSON:async(key,value)=>records.set(key,value),async *list({prefix}){yield {blobs:[...records.keys()].filter(key=>key.startsWith(prefix)).map(key=>({key}))};}};
+ const store={delete:async key=>records.delete(key),get:async key=>records.get(key)||null,setJSON:async(key,value)=>records.set(key,value),async *list({prefix}){yield {blobs:[...records.keys()].filter(key=>key.startsWith(prefix)).map(key=>({key}))};}};
  const handler=createHandler({getStore:()=>store,password:()=>password,party:{location:'Private venue',address:'Secret address'}});
  const post=(body,cookie='',origin='https://party.example')=>handler(new Request('https://party.example/.netlify/functions/api',{method:'POST',headers:{'Content-Type':'application/json',cookie,origin},body:JSON.stringify(body)}));
  return {handler,post,records};
@@ -84,4 +84,34 @@ test('hosts grant and revoke plus ones on existing links; guests cannot grant th
  assert.equal((await post(rsvp)).status,400);
  const legacy={...guest};delete legacy.plusOneAllowed;delete legacy.plusOne;records.set(`invite/${guest.token}`,legacy);
  assert.equal((await post({...rsvp,plusOne:false})).status,200);
+});
+
+
+test('FAQs support authenticated creation, editing, deletion and uncached public reads',async()=>{
+ const {post,handler}=fixture();const cookie=`after_dark_host=${makeSession(secret)}`;
+ const read=()=>handler(new Request('https://party.example/.netlify/functions/api?view=faq'));
+ assert.deepEqual(await (await read()).json(),{faqs:[]});
+ const input={action:'faq-save',question:'  What should I wear?  ',answer:'Costumes!\n<script>plain text</script>'};
+ assert.equal((await post(input)).status,401);
+ assert.equal((await post(input,cookie,'https://evil.example')).status,403);
+ const saved=await post(input,cookie);assert.equal(saved.status,200);
+ const {faq}=await saved.json();assert.equal(faq.question,'What should I wear?');
+ const response=await read();assert.equal(response.headers.get('cache-control'),'no-store');
+ assert.deepEqual(await response.json(),{faqs:[faq]});
+ assert.equal((await post({...input,id:faq.id,answer:'Anything heavenly.'},cookie)).status,200);
+ assert.equal((await (await read()).json()).faqs[0].answer,'Anything heavenly.');
+ assert.equal((await post({action:'faq-delete',id:faq.id})).status,401);
+ assert.equal((await post({action:'faq-delete',id:faq.id},cookie)).status,200);
+ assert.deepEqual(await (await read()).json(),{faqs:[]});
+ assert.equal((await post({...input,id:faq.id},cookie)).status,404);
+});
+
+test('FAQ validation rejects blank, oversized and malformed entries without writes',async()=>{
+ const {post,records}=fixture();const cookie=`after_dark_host=${makeSession(secret)}`;
+ const input={action:'faq-save',question:'Question?',answer:'Answer.'};
+ for(const invalid of [{question:' '},{answer:' '},{question:'q'.repeat(201)},{answer:'a'.repeat(3001)},{question:3},{answer:null},{id:[]},{id:'../invite/private'}]){
+  assert.equal((await post({...input,...invalid},cookie)).status,400);
+ }
+ assert.equal((await post({action:'faq-delete',id:'../invite/private'},cookie)).status,400);
+ assert.equal(records.size,0);
 });

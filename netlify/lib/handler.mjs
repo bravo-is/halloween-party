@@ -12,9 +12,9 @@ export function validSession(cookie,secret,now=Date.now()){
   const [expires,sig]=value.split('.');return /^\d+$/.test(expires)&&Number(expires)>now&&Number(expires)<=now+8*60*60*1000&&!!sig&&equal(sig,signature(expires,secret));
 }
 export function createHandler({getStore,password,party}){
-  async function guestsIn(store){
+  async function guestsIn(store,prefix='invite/'){
     const guests=[];
-    for await(const page of store.list({prefix:'invite/',paginate:true})){
+    for await(const page of store.list({prefix,paginate:true})){
       guests.push(...(await Promise.all(page.blobs.map(blob=>store.get(blob.key,{type:'json'})))).filter(Boolean));
     }
     return guests;
@@ -27,6 +27,9 @@ export function createHandler({getStore,password,party}){
     if(!['GET','POST'].includes(request.method))return json({error:'Method not allowed.'},405,{'Allow':'GET, POST'});
     try{
       if(request.method==='GET'){
+        if(url.searchParams.get('view')==='faq'){
+          return json({faqs:(await guestsIn(getStore(),'faq/')).sort((a,b)=>a.id.localeCompare(b.id))});
+        }
         if(url.searchParams.get('view')==='board'){
           const store=getStore();const guests=await guestsIn(store);
           const announcement=await store.get('board/announcement',{type:'json'});
@@ -61,6 +64,18 @@ export function createHandler({getStore,password,party}){
       }
       if(body.action==='logout')return json({ok:true},200,{'Set-Cookie':cookie('',0)});
       if(!validSession(request.headers.get('cookie'),secret))return json({error:'Sign in to view the guest list.'},401);
+      if(body.action==='faq-save'){
+        if(typeof body.question!=='string'||!body.question.trim()||body.question.length>200||typeof body.answer!=='string'||!body.answer.trim()||body.answer.length>3000)return json({error:'Enter a question (up to 200 characters) and an answer (up to 3,000 characters).'},400);
+        if(body.id!==undefined&&(typeof body.id!=='string'||!tokenPattern.test(body.id)))return json({error:'Invalid FAQ.'},400);
+        const store=getStore();
+        if(body.id&&!await store.get(`faq/${body.id}`,{type:'json'}))return json({error:'This FAQ no longer exists. Refresh the list.'},404);
+        const faq={id:body.id||randomBytes(24).toString('hex'),question:body.question.trim(),answer:body.answer.trim()};
+        await store.setJSON(`faq/${faq.id}`,faq);return json({faq});
+      }
+      if(body.action==='faq-delete'){
+        if(typeof body.id!=='string'||!tokenPattern.test(body.id))return json({error:'Invalid FAQ.'},400);
+        await getStore().delete(`faq/${body.id}`);return json({ok:true});
+      }
       if(body.action==='announcement'){
         if(typeof body.text!=='string'||body.text.length>3000)return json({error:'Keep the announcement under 3,000 characters.'},400);
         const announcement={text:body.text.trim(),updatedAt:new Date().toISOString()};

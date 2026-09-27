@@ -16,6 +16,7 @@ async function refresh(){
   $('#total-count').textContent=String(guests.reduce((sum,g)=>sum+1+(g.plusOneAllowed?1:0),0));
   for(const status of ['yes','no','pending']) $(`#${status}-count`).textContent=String(guests.filter(g=>g.status===status).reduce((sum,g)=>sum+1+(status==='yes'&&g.plusOne?1:0),0));
   render();
+  await refreshFaqs();
 }
 const inviteUrl = (token:string) => `${location.origin}/?invite=${encodeURIComponent(token)}#invitation`;
 function render(){
@@ -52,5 +53,36 @@ $('#announcement-form').addEventListener('submit',async event=>{
   event.preventDefault();const button=$<HTMLButtonElement>('#announcement-form button');button.disabled=true;
   try{await api('announcement',{text:$<HTMLTextAreaElement>('#announcement').value});$('#announcement-message').textContent='Saved. The public board is updated.';}
   catch(error){$('#announcement-message').textContent=(error as Error).message;}
+  finally{button.disabled=false;}
+});
+
+
+type Faq = {id:string;question:string;answer:string};
+function resetFaq(){ $<HTMLFormElement>('#faq-form').reset(); $<HTMLInputElement>('#faq-id').value=''; $('#faq-cancel').hidden=true; }
+async function refreshFaqs(){
+  const response=await fetch('/.netlify/functions/api?view=faq',{cache:'no-store'});
+  if(!response.ok) throw new Error('Could not load FAQs. Try refreshing.');
+  const {faqs}=await response.json();
+  const list=$('#host-faq-list');list.replaceChildren();
+  if(!faqs.length){const empty=document.createElement('p');empty.className='subtle';empty.textContent='No FAQs yet. Add the first question below.';list.append(empty);}
+  faqs.forEach((faq:Faq)=>{
+    const row=document.createElement('article');row.className='faq-admin-row';
+    const title=document.createElement('h3');title.textContent=faq.question;
+    const answer=document.createElement('p');answer.className='announcement-copy';answer.textContent=faq.answer;
+    const edit=document.createElement('button');edit.type='button';edit.className='button';edit.textContent='Edit';edit.setAttribute('aria-label',`Edit: ${faq.question}`);
+    edit.addEventListener('click',()=>{$<HTMLInputElement>('#faq-id').value=faq.id;$<HTMLInputElement>('#faq-question').value=faq.question;$<HTMLTextAreaElement>('#faq-answer').value=faq.answer;$('#faq-cancel').hidden=false;$('#faq-question').focus();});
+    const remove=document.createElement('button');remove.type='button';remove.className='button';remove.textContent='Remove';remove.setAttribute('aria-label',`Remove: ${faq.question}`);
+    remove.addEventListener('click',async()=>{remove.disabled=true;try{await api('faq-delete',{id:faq.id});if($<HTMLInputElement>('#faq-id').value===faq.id)resetFaq();await refreshFaqs();$('#faq-message').textContent='FAQ removed.';}catch(error){$('#faq-message').textContent=(error as Error).message;}finally{remove.disabled=false;}});
+    row.append(title,answer,edit,document.createTextNode(' '),remove);list.append(row);
+  });
+}
+$('#faq-cancel').addEventListener('click',resetFaq);
+$('#faq-form').addEventListener('submit',async event=>{
+  event.preventDefault();const button=$<HTMLButtonElement>('#faq-form button[type="submit"]');button.disabled=true;
+  try{
+    const id=$<HTMLInputElement>('#faq-id').value;
+    await api('faq-save',{...(id?{id}:{}),question:$<HTMLInputElement>('#faq-question').value,answer:$<HTMLTextAreaElement>('#faq-answer').value});
+    resetFaq();$('#faq-message').textContent='Saved. Guests will see this answer within 15 seconds.';await refreshFaqs();
+  }catch(error){$('#faq-message').textContent=(error as Error).message;}
   finally{button.disabled=false;}
 });

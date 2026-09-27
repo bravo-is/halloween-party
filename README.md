@@ -103,3 +103,15 @@ pending and declined invitations. It does not reveal names, notes, or the venue.
 The host Coming count includes confirmed +1s; pending and declined counts are
 invitation responses. Announcements and the total load when the page is opened
 or reloaded, without requiring a deployment.
+
+## Frequently Asked Questions
+
+Hosts can add, edit, and remove questions and answers in the FAQ editor at
+`/admin/`. Each entry is stored independently in Netlify Blobs, so changes need
+no rebuild or deployment. Questions allow 200 characters and answers 3,000.
+Answers support plain text and line breaks and are publicly readable.
+
+The invitation page checks for FAQ updates every 15 seconds while visible and
+again when returning to the tab or reconnecting. Expanded answers stay open
+across updates. Failed requests retain previously loaded answers and retry
+on the next interval. New sites show an empty state until hosts add an FAQ.
