@@ -24,6 +24,28 @@ test('host login, guest creation, private invitation and RSVP updates persist',a
  await post({action:'rsvp',token:guest.token,status:'no',note:'Plans changed.'});
  list=await (await post({action:'list'},cookie)).json();assert.equal(list.guests[0].status,'no');assert.equal(list.guests.length,1);
 });
+test('only hosts can delete invitations, revoking links and RSVPs and updating counts',async()=>{
+ const {post,handler,records}=fixture();const cookie=`after_dark_host=${makeSession(secret)}`;
+ const {guest}=await (await post({action:'create',name:'Alex',plusOneAllowed:true},cookie)).json();
+ const {guest:other}=await (await post({action:'create',name:'Sam'},cookie)).json();
+ await post({action:'rsvp',token:guest.token,status:'yes',note:'See you there',plusOne:true});
+ const deletion={action:'delete',token:guest.token};
+ assert.equal((await post(deletion)).status,401);
+ assert.equal((await post(deletion,cookie,'https://evil.example')).status,403);
+ for(const token of [undefined,null,[],[guest.token],'../board/announcement','invalid']){
+  assert.equal((await post({action:'delete',token},cookie)).status,400);
+ }
+ assert.equal(records.has(`invite/${guest.token}`),true);
+ assert.equal((await post(deletion,cookie)).status,200);
+ assert.equal(records.has(`invite/${guest.token}`),false);
+ assert.equal((await handler(new Request(`https://party.example/.netlify/functions/api?invite=${guest.token}`))).status,404);
+ assert.equal((await post({action:'rsvp',token:guest.token,status:'yes',note:''})).status,404);
+ assert.deepEqual((await (await post({action:'list'},cookie)).json()).guests,[other]);
+ const board=await (await handler(new Request('https://party.example/.netlify/functions/api?view=board'))).json();
+ assert.equal(board.invitedCount,1);
+ assert.equal((await post(deletion,cookie)).status,200);
+});
+
 test('invalid input, missing tokens and cross-origin writes are rejected',async()=>{
  const {post,handler}=fixture();const cookie=`after_dark_host=${makeSession(secret)}`;
  assert.equal((await post({action:'create',name:'  '},cookie)).status,400);

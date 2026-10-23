@@ -36,7 +36,15 @@ function render(){
     const extra=document.createElement('button');extra.className='button';extra.textContent=guest.plusOneAllowed?'Remove +1':'Allow +1';extra.setAttribute('aria-label',`${extra.textContent} for ${guest.name}`);
     extra.addEventListener('click',async()=>{extra.disabled=true;try{await api('edit',{token:guest.token,plusOneAllowed:!guest.plusOneAllowed});await refresh();$('#admin-message').textContent='Invitation updated. The existing link and QR code still work.';}catch(error){$('#admin-message').textContent=(error as Error).message;}finally{extra.disabled=false;}});
     if(guest.plusOneAllowed){const detail=document.createElement('p');detail.className='subtle';detail.textContent=guest.plusOne?'Bringing a +1':'+1 allowed · not attending or not yet confirmed';info.append(detail);}
-    actions.append(extra,copy,qr);row.append(info,actions);list.append(row);
+    const remove=document.createElement('button');remove.type='button';remove.className='button';remove.textContent='Delete invitation';remove.setAttribute('aria-label',`Delete invitation for ${guest.name}`);
+    remove.addEventListener('click',async()=>{
+      if(!window.confirm(`Delete the invitation for ${guest.name}? Their RSVP will be removed and their invitation link and QR code will stop working. This cannot be undone.`))return;
+      remove.disabled=true;
+      try{await api('delete',{token:guest.token});await refresh();$('#admin-message').textContent=`Invitation for ${guest.name} deleted.`;}
+      catch(error){$('#admin-message').textContent=(error as Error).message;}
+      finally{remove.disabled=false;}
+    });
+    actions.append(extra,copy,qr,remove);row.append(info,actions);list.append(row);
   });
 }
 $('#login').addEventListener('submit',async e=>{e.preventDefault();const button=$<HTMLButtonElement>('#login button');button.disabled=true;try{await api('login',{password:$<HTMLInputElement>('#password').value});$<HTMLInputElement>('#password').value='';$('#login-message').classList.remove('error');await refresh();}catch(error){$('#login-message').textContent=(error as Error).message;$('#login-message').classList.add('error');}finally{button.disabled=false;}});
