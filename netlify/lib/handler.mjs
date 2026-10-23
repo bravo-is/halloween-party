@@ -81,6 +81,10 @@ export function createHandler({getStore,password,party}){
         const announcement={text:body.text.trim(),updatedAt:new Date().toISOString()};
         await getStore().setJSON('board/announcement',announcement);return json({announcement});
       }
+      if(body.action==='delete'){
+        if(typeof body.token!=='string'||!tokenPattern.test(body.token))return json({error:'Invalid invitation.'},400);
+        await getStore().delete(`invite/${body.token}`);return json({ok:true});
+      }
       if(body.action==='edit'){
         if(!tokenPattern.test(body.token||'')||typeof body.plusOneAllowed!=='boolean')return json({error:'Invalid invitation update.'},400);
         const store=getStore();const guest=await store.get(`invite/${body.token}`,{type:'json'});
